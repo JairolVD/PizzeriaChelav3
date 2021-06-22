@@ -1,0 +1,702 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package pizzeriadechela;
+
+import java.util.ArrayList;
+import javax.swing.DefaultListModel;
+import javax.swing.JOptionPane;
+import pizzeriadechela.database.MysqlAction;
+import pizzeriadechela.database.data.*;
+import pizzeriadechela.componentes.*;
+
+/**
+ *
+ * @author Anaiza
+ */
+public class PizzeriaDChelaFrame extends javax.swing.JFrame {
+    
+    private javax.swing.JFrame _principal;
+    private Boolean _cargado;
+    private Boolean _isPizzasView;
+    
+    // Puede ser cliente o trabajador
+    private CuentaDto _cuenta;
+    
+    private MysqlAction _mysqlAction;
+    
+    // Aqui se cargan las pizzas
+    private ArrayList<PizzasDto> _pizzas;
+    // Aqui se cargan los repartidores
+    private ArrayList<CuentaDto> _repartidores;
+    private DefaultListModel _modeloLista;
+    // Aqui se caran los pedidos del cliente
+    private DefaultListModel _pedidosLista;
+    
+    private AdminJFrame _adminFrame;
+    
+    int getIndexPizza(PizzasDto dto){
+        for (int index = 0; index < _modeloLista.size(); index++){
+            PizzasDto pizza = (PizzasDto)_modeloLista.get(index);
+            if (pizza.toString().equals(dto.toString()))
+                return index;
+        }
+        return -1;
+    }
+    
+    PizzasDto getPizzaByIndex(int index){
+        if (index < 0)
+            return null;
+        
+        return (PizzasDto)_modeloLista.get(index);
+    }
+    
+    int getIndexPedido(PedidosDto dto){
+        for (int index = 0; index < _modeloLista.size(); index++){
+            PedidosDto pedido = (PedidosDto)_pedidosLista.get(index);
+            if (pedido.toString().equals(dto.toString()))
+                return index;
+        }
+        return -1;
+    }
+    
+    PedidosDto getPedidoByIndex(int index){
+        if (index < 0)
+            return null;
+        
+        return (PedidosDto)_pedidosLista.get(index);
+    }
+    
+    CuentaDto getRepartidor(String dni){
+        for (int i = 0; i < _repartidores.size(); i++){
+            CuentaDto repartidor = _repartidores.get(i);
+            if (repartidor.getDni().equals(dni))
+                return repartidor;
+        }
+        CuentaDto dto = new CuentaDto();
+        dto.setPerfil(new CuentaPerfilDto());
+        dto.getPerfil().setNombre("Ninguno");
+        return dto;
+    }
+    
+    /*void addElement(Object o){
+        _modeloLista.addElement(o);
+        _pizzasJList.setModel(_modeloLista);
+        _pizzasJList.updateUI();
+    }
+    
+    void updateElement(Object o){
+        int index = getIndexPizza((PizzasDto)o);
+        if (index < 0)
+            return;
+        
+        _modeloLista.setElementAt(o, index);
+        _pizzasJList.setModel(_modeloLista);
+        _pizzasJList.updateUI();
+    }
+    
+    void removeElement(Object o){
+        int index = getIndexPizza((PizzasDto)o);
+        if (index < 0)
+            return;
+        
+        _modeloLista.removeElementAt(index);
+        _pizzasJList.setModel(_modeloLista);
+        _pizzasJList.updateUI();
+    }*/
+
+    /**
+     * Creates new form PizzeriaDChelaFrame
+     */
+    
+    void restablecerOrdenView(){
+        _pizzaImgPanel.removeAll();
+        _pizzaImgPanel.repaint();
+        _precioLabel.setText("Precio");
+        _metodopagoComboBox.setSelectedIndex(-1);
+        _cantidadTextField.setText("1");
+        _repartidorComboBox.setSelectedIndex(0);
+    }
+    
+    public PizzeriaDChelaFrame() {
+        initComponents();
+        this.setLocationRelativeTo(null);
+    }
+    
+    public PizzeriaDChelaFrame initializate(javax.swing.JFrame principal, CuentaDto cuenta, MysqlAction mysqlAction){
+        _principal = principal;
+        _cuenta = cuenta;
+        _mysqlAction = mysqlAction;
+        _cargado = false;
+        _modeloLista = new DefaultListModel();
+        _pedidosLista = new DefaultListModel();
+        _aminMenuBar.setEnabled(_cuenta.getCargo() > 2);
+        return this;
+    }
+    
+    void updatePizzaView(PizzasDto pizza){
+
+        Imagen imagen = new Imagen(284, 141);
+        imagen.setImageUrl(pizza.getImagenUrl());
+        _pizzaImgPanel.add(imagen);
+        _pizzaImgPanel.repaint();
+        
+        JOptionPane.showMessageDialog(null, String.format("Nombre: %s\nDescripcion: %s\nPrecio: %10.2f\nOferta: %s",
+                pizza.getNombre(), pizza.getDescripcion(), pizza.getPrecio(), pizza.getOferta() == 1 ? "2X1" : "No"),
+                "Informacion de la Pizza", JOptionPane.INFORMATION_MESSAGE);
+        
+        _precioLabel.setText(String.format("S/%10.2f", pizza.getPrecio()));
+    }
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        jMenu1 = new javax.swing.JMenu();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        _pizzasJList = new javax.swing.JList();
+        _pizzaImgPanel = new javax.swing.JPanel();
+        _cancelarJButton = new javax.swing.JButton();
+        _seleccionarJButton = new javax.swing.JButton();
+        _ordenarJButton = new javax.swing.JButton();
+        _precioLabel = new javax.swing.JLabel();
+        _dniTextField = new javax.swing.JTextField();
+        jLabel3 = new javax.swing.JLabel();
+        _cantidadTextField = new javax.swing.JTextField();
+        _pedidosButton = new javax.swing.JButton();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        _metodopagoComboBox = new javax.swing.JComboBox();
+        jLabel6 = new javax.swing.JLabel();
+        _repartidorComboBox = new javax.swing.JComboBox();
+        _pedidoFinalizarButton = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        jMenuBar1 = new javax.swing.JMenuBar();
+        jMenu2 = new javax.swing.JMenu();
+        _verPizzasMenuBar = new javax.swing.JMenu();
+        _verRepartidoresMenuBar = new javax.swing.JMenu();
+        jMenu3 = new javax.swing.JMenu();
+        jMenuItem2 = new javax.swing.JMenuItem();
+        _aminMenuBar = new javax.swing.JMenu();
+        _cerrarSessionMenuBar = new javax.swing.JMenu();
+
+        jMenu1.setText("jMenu1");
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        setUndecorated(true);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowActivated(java.awt.event.WindowEvent evt) {
+                formWindowActivated(evt);
+            }
+        });
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        _pizzasJList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        jScrollPane1.setViewportView(_pizzasJList);
+
+        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 20, 239, 305));
+
+        javax.swing.GroupLayout _pizzaImgPanelLayout = new javax.swing.GroupLayout(_pizzaImgPanel);
+        _pizzaImgPanel.setLayout(_pizzaImgPanelLayout);
+        _pizzaImgPanelLayout.setHorizontalGroup(
+            _pizzaImgPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 284, Short.MAX_VALUE)
+        );
+        _pizzaImgPanelLayout.setVerticalGroup(
+            _pizzaImgPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 141, Short.MAX_VALUE)
+        );
+
+        getContentPane().add(_pizzaImgPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 20, -1, -1));
+
+        _cancelarJButton.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        _cancelarJButton.setText("Cancelar");
+        _cancelarJButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                _cancelarJButtonMouseClicked(evt);
+            }
+        });
+        getContentPane().add(_cancelarJButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 510, 100, 40));
+
+        _seleccionarJButton.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        _seleccionarJButton.setText("Seleccionar");
+        _seleccionarJButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                _seleccionarJButtonMouseClicked(evt);
+            }
+        });
+        _seleccionarJButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                _seleccionarJButtonActionPerformed(evt);
+            }
+        });
+        getContentPane().add(_seleccionarJButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 340, 100, 40));
+
+        _ordenarJButton.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        _ordenarJButton.setText("Ordenar");
+        _ordenarJButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                _ordenarJButtonMouseClicked(evt);
+            }
+        });
+        getContentPane().add(_ordenarJButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 510, 90, 40));
+
+        _precioLabel.setFont(new java.awt.Font("Arial", 0, 15)); // NOI18N
+        _precioLabel.setText("Precio");
+        getContentPane().add(_precioLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 170, -1, 30));
+
+        _dniTextField.setFont(new java.awt.Font("Arial", 0, 13)); // NOI18N
+        getContentPane().add(_dniTextField, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 280, 140, 30));
+
+        jLabel3.setFont(new java.awt.Font("Arial", 1, 15)); // NOI18N
+        jLabel3.setText("Cantidad:");
+        getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 430, -1, 30));
+
+        _cantidadTextField.setFont(new java.awt.Font("Arial", 0, 13)); // NOI18N
+        _cantidadTextField.setText("1");
+        getContentPane().add(_cantidadTextField, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 430, 140, 30));
+
+        _pedidosButton.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        _pedidosButton.setText("Pedidos");
+        _pedidosButton.setToolTipText("");
+        _pedidosButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                _pedidosButtonMouseClicked(evt);
+            }
+        });
+        _pedidosButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                _pedidosButtonActionPerformed(evt);
+            }
+        });
+        getContentPane().add(_pedidosButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 390, 100, 40));
+
+        jLabel4.setFont(new java.awt.Font("Arial", 1, 15)); // NOI18N
+        jLabel4.setText("Cliente DNI:");
+        getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 280, -1, 30));
+
+        jLabel5.setFont(new java.awt.Font("Arial", 1, 15)); // NOI18N
+        jLabel5.setText("Metodo Pago:");
+        getContentPane().add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 330, -1, 30));
+
+        _metodopagoComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Visa", "Transferencia - Yape" }));
+        _metodopagoComboBox.setSelectedIndex(-1);
+        getContentPane().add(_metodopagoComboBox, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 330, 140, 30));
+
+        jLabel6.setFont(new java.awt.Font("Arial", 1, 15)); // NOI18N
+        jLabel6.setText("Repartidores:");
+        getContentPane().add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 380, -1, 30));
+
+        _repartidorComboBox.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        _repartidorComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Ninguno" }));
+        getContentPane().add(_repartidorComboBox, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 380, 140, 30));
+
+        _pedidoFinalizarButton.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        _pedidoFinalizarButton.setText("Finalizar");
+        _pedidoFinalizarButton.setToolTipText("");
+        _pedidoFinalizarButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                _pedidoFinalizarButtonMouseClicked(evt);
+            }
+        });
+        getContentPane().add(_pedidoFinalizarButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 440, 100, 40));
+
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/0.1.jpg"))); // NOI18N
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 590, 590));
+
+        jMenu2.setText("Menu");
+
+        _verPizzasMenuBar.setText("Pizzas");
+        _verPizzasMenuBar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                _verPizzasMenuBarMouseClicked(evt);
+            }
+        });
+        jMenu2.add(_verPizzasMenuBar);
+
+        _verRepartidoresMenuBar.setText("Repartidores");
+        _verRepartidoresMenuBar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                _verRepartidoresMenuBarMouseClicked(evt);
+            }
+        });
+        jMenu2.add(_verRepartidoresMenuBar);
+
+        jMenu3.setText("Reclamos");
+
+        jMenuItem2.setText("Libro de Reclamaciones");
+        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem2ActionPerformed(evt);
+            }
+        });
+        jMenu3.add(jMenuItem2);
+
+        jMenu2.add(jMenu3);
+
+        jMenuBar1.add(jMenu2);
+
+        _aminMenuBar.setText("Admin");
+        _aminMenuBar.addMenuListener(new javax.swing.event.MenuListener() {
+            public void menuCanceled(javax.swing.event.MenuEvent evt) {
+            }
+            public void menuDeselected(javax.swing.event.MenuEvent evt) {
+            }
+            public void menuSelected(javax.swing.event.MenuEvent evt) {
+                _aminMenuBarMenuSelected(evt);
+            }
+        });
+        _aminMenuBar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                _aminMenuBarMouseClicked(evt);
+            }
+        });
+        jMenuBar1.add(_aminMenuBar);
+
+        _cerrarSessionMenuBar.setText("Cerrar Sesion");
+        _cerrarSessionMenuBar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                _cerrarSessionMenuBarMouseClicked(evt);
+            }
+        });
+        jMenuBar1.add(_cerrarSessionMenuBar);
+
+        setJMenuBar(jMenuBar1);
+
+        pack();
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
+        // TODO add your handling code here:
+        if (!_cargado){
+            _pizzas = _mysqlAction.getPizzas();
+            for (int i = 0; i < _pizzas.size(); i++){
+                _modeloLista.addElement(_pizzas.get(i));
+            }
+            _pizzasJList.setModel(_modeloLista);
+            _pizzasJList.updateUI();
+            
+            _repartidores = _mysqlAction.getRepartidores();
+            for (int i = 0; i < _repartidores.size(); i++){
+                _repartidorComboBox.addItem(_repartidores.get(i).getPerfil().getNombre());
+            }
+            _repartidorComboBox.setSelectedIndex(0);
+            _isPizzasView = true;
+            _cargado = true;
+        }
+    }//GEN-LAST:event_formWindowActivated
+
+    private void _seleccionarJButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event__seleccionarJButtonMouseClicked
+        // TODO add your handling code here:
+        if (_isPizzasView){
+            PizzasDto pizza = getPizzaByIndex(_pizzasJList.getSelectedIndex());
+            if (pizza == null){
+                JOptionPane.showMessageDialog(null, "No se ha seleccionado una pizza.", "Ocurrio un error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            updatePizzaView(pizza);
+        }else{
+            PedidosDto pedido = getPedidoByIndex(_pizzasJList.getSelectedIndex());
+            if (pedido == null){
+                    return;
+                }
+            
+            CuentaDto repartidor = getRepartidor(pedido.getDniR());
+            JOptionPane.showMessageDialog(null, String.format("Cliente DNI: %s\nNombre: %s\nTamaño: %s\nMetodo de Pago: %s\nFecha: %s\nCantidad: %d\n"
+                    + "Repartidor: %s\nEstado: %s",
+                pedido.getDniC(), pedido.getDetalle().getPizzas().getNombre(), pedido.getDetalle().getTamanio(),
+                pedido.getDetalle().getMetodoPago() == 0 ? "Visa" : "Transferencia Yape", pedido.getComprobante().getFecha(),
+                pedido.getDetalle().getCantidad(), repartidor.getPerfil().getNombre(), pedido.getDetalle().getEstadoString()),
+                "Informacion del Pedido", JOptionPane.INFORMATION_MESSAGE);
+        }
+    }//GEN-LAST:event__seleccionarJButtonMouseClicked
+
+    private void _verPizzasMenuBarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event__verPizzasMenuBarMouseClicked
+        // TODO add your handling code here:
+            restablecerOrdenView();
+            _modeloLista.clear();
+            _pizzas = _mysqlAction.getPizzas();
+            for (int i = 0; i < _pizzas.size(); i++){
+                _modeloLista.addElement(_pizzas.get(i));
+            }
+            _pizzasJList.setModel(_modeloLista);
+            _pizzasJList.updateUI();
+            _isPizzasView = true;
+    }//GEN-LAST:event__verPizzasMenuBarMouseClicked
+
+    private void _cerrarSessionMenuBarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event__cerrarSessionMenuBarMouseClicked
+        // TODO add your handling code here:
+        
+        if (_adminFrame != null){
+            _adminFrame.dispose();
+        }
+        
+        _principal.setVisible(true);
+        dispose();
+    }//GEN-LAST:event__cerrarSessionMenuBarMouseClicked
+
+    private void _aminMenuBarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event__aminMenuBarMouseClicked
+        // TODO add your handling code here:
+        if (_adminFrame != null){
+            _adminFrame.setFocusable(true);
+            return;
+        }
+        
+        _adminFrame = new AdminJFrame() {
+            @Override
+            public void dispose(){
+                _adminFrame = null;
+                super.dispose();
+            }
+        };
+        _adminFrame.initializate(_mysqlAction, this);
+            _adminFrame.setVisible(true);
+    }//GEN-LAST:event__aminMenuBarMouseClicked
+
+    private void _pedidosButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event__pedidosButtonMouseClicked
+        // TODO add your handling code here:
+        
+        if (!Utilidad.validarDNI(_dniTextField.getText())){
+            JOptionPane.showMessageDialog(null, "El DNI del cliente no es válido.", "Ocurrio un error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        _pedidosLista.clear();
+        ArrayList<PedidosDto> pedidos = _mysqlAction.getPedidos(_dniTextField.getText());
+        if (pedidos.size() < 1){
+            JOptionPane.showMessageDialog(null, "No se encontraron pedidos del cliente.", "Ocurrio un error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        for (int index = 0; index < pedidos.size(); index++){
+            _pedidosLista.addElement(pedidos.get(index));
+        }
+        _pizzasJList.setModel(_pedidosLista);
+        _pizzasJList.updateUI();
+        _isPizzasView = false;
+        
+    }//GEN-LAST:event__pedidosButtonMouseClicked
+
+    private void _ordenarJButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event__ordenarJButtonMouseClicked
+        // TODO add your handling code here:
+        
+        if (!_isPizzasView){
+            return;
+        }
+        
+        if (!Utilidad.validarDNI(_dniTextField.getText())){
+            JOptionPane.showMessageDialog(null, "El DNI del cliente no es válido.", "Ocurrio un error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        if (_metodopagoComboBox.getSelectedIndex() < 0){
+            JOptionPane.showMessageDialog(null, "El Metodo de Pago no es válido.", "Ocurrio un error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        if (!Utilidad.validarCantidad(_cantidadTextField.getText())){
+            JOptionPane.showMessageDialog(null, "La cantidad no es válido.", "Ocurrio un error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        CuentaDto repartidor = null;
+        
+        if (_repartidorComboBox.getSelectedIndex() - 1 >= 0){
+            repartidor = _repartidores.get(_repartidorComboBox.getSelectedIndex() - 1);
+            PedidosDto pedido = _mysqlAction.getRepartidor(repartidor.getDni());
+            if (pedido != null && pedido.getDetalle().getEstado() != 0){
+                JOptionPane.showMessageDialog(null, "El repartidor está entregando un pedido.", "Info", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+        }
+        
+        PizzasDto pizza = getPizzaByIndex(_pizzasJList.getSelectedIndex());
+        if (pizza == null){
+            JOptionPane.showMessageDialog(null, "No se ha seleccionado una pizza.", "Ocurrio un error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        PedidosDto pedidos = new PedidosDto();
+        pedidos.setDetalle(new PizzaDetalleDto());
+        pedidos.setDniC(_dniTextField.getText());
+        pedidos.setDniV(_cuenta.getDni());
+        if (repartidor != null) {
+            pedidos.setDniR(repartidor.getDni());
+            pedidos.getDetalle().setEstado((byte)1);
+        }
+        else {
+            pedidos.setDniR("00000000");
+            pedidos.getDetalle().setEstado((byte)0);
+        }
+        
+        pedidos.getDetalle().setPizzaId(pizza.getId());
+        pedidos.getDetalle().setMetodoPago((byte)_metodopagoComboBox.getSelectedIndex());
+        pedidos.getDetalle().setTamanio(pizza.getDescripcion());
+        pedidos.getDetalle().setCantidad(Utilidad.toByte(_cantidadTextField.getText()));
+        
+        if (!_mysqlAction.addPedido(pedidos)){
+            JOptionPane.showMessageDialog(null, "No se pudo ordenar el pedido.", "Ocurrio un error", JOptionPane.ERROR_MESSAGE);
+        }else{
+            JOptionPane.showMessageDialog(null, "Se ha ordenado el pedido correctamente.", "Info", JOptionPane.INFORMATION_MESSAGE);
+            restablecerOrdenView();
+        }
+    }//GEN-LAST:event__ordenarJButtonMouseClicked
+
+    private void _cancelarJButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event__cancelarJButtonMouseClicked
+        // TODO add your handling code here:
+        if (!_isPizzasView){
+            PedidosDto pedido = getPedidoByIndex(_pizzasJList.getSelectedIndex());
+            if (pedido == null){
+                    JOptionPane.showMessageDialog(null, "No se ha seleccionado un pedido.", "Ocurrio un error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+            
+            if (!_mysqlAction.deletePedido(pedido)){
+                JOptionPane.showMessageDialog(null, "No se pudo eliminar el pedido.", "Ocurrio un error", JOptionPane.ERROR_MESSAGE);
+            }else{
+                JOptionPane.showMessageDialog(null, "Pedido eliminado correctamente.", "Info", JOptionPane.INFORMATION_MESSAGE);
+                _pedidosLista.remove(_pizzasJList.getSelectedIndex());
+                _pizzasJList.setModel(_pedidosLista);
+                _pizzasJList.updateUI();
+            }
+        }else{
+            int resultado = JOptionPane.showConfirmDialog(null, "¿Desea restablecer los datos?.", "Info", 1, JOptionPane.INFORMATION_MESSAGE);
+            if (resultado == 0){
+                restablecerOrdenView();
+            }
+        }
+    }//GEN-LAST:event__cancelarJButtonMouseClicked
+
+    private void _pedidoFinalizarButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event__pedidoFinalizarButtonMouseClicked
+        // TODO add your handling code here:
+        if (!_isPizzasView){
+            PedidosDto pedido = getPedidoByIndex(_pizzasJList.getSelectedIndex());
+            if (pedido == null){
+                    JOptionPane.showMessageDialog(null, "No se ha seleccionado un pedido.", "Ocurrio un error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+            
+            if (pedido.getDetalle().getEstado() == 0){
+                JOptionPane.showMessageDialog(null, "El pedido fue actualizado anteriormente.", "Info", JOptionPane.INFORMATION_MESSAGE);
+                    return;
+            }
+            
+            int resultado = JOptionPane.showConfirmDialog(null, "¿Desea finalizar el pedido?.", "Ocurrio un error", 1, JOptionPane.INFORMATION_MESSAGE);
+            if (resultado != 0){
+                return;
+            }
+            
+            pedido.getDetalle().setEstado((byte)0);
+            if (!_mysqlAction.updatePedidoDetalle(pedido.getDetalle())){
+                JOptionPane.showMessageDialog(null, "No se pudo finalizar el pedido.", "Ocurrio un error", JOptionPane.ERROR_MESSAGE);
+                pedido.getDetalle().setEstado((byte)1);
+            }else{
+                JOptionPane.showMessageDialog(null, "El pedido fue actualizado correctamente.", "Info", JOptionPane.INFORMATION_MESSAGE);
+                _pedidosLista.setElementAt(pedido, _pizzasJList.getSelectedIndex());
+                _pizzasJList.setModel(_pedidosLista);
+                _pizzasJList.updateUI();
+            }
+        }
+    }//GEN-LAST:event__pedidoFinalizarButtonMouseClicked
+
+    private void _verRepartidoresMenuBarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event__verRepartidoresMenuBarMouseClicked
+        // TODO add your handling code here:
+        _repartidorComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Ninguno" }));
+        _repartidores = _mysqlAction.getRepartidores();
+        for (int i = 0; i < _repartidores.size(); i++){
+            _repartidorComboBox.addItem(_repartidores.get(i).getPerfil().getNombre());
+        }
+        _repartidorComboBox.setSelectedIndex(0);
+    }//GEN-LAST:event__verRepartidoresMenuBarMouseClicked
+
+    private void _seleccionarJButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event__seleccionarJButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event__seleccionarJButtonActionPerformed
+
+    private void _pedidosButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event__pedidosButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event__pedidosButtonActionPerformed
+
+    private void _aminMenuBarMenuSelected(javax.swing.event.MenuEvent evt) {//GEN-FIRST:event__aminMenuBarMenuSelected
+        // TODO add your handling code here:
+    }//GEN-LAST:event__aminMenuBarMenuSelected
+
+    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+        // TODO add your handling code here:
+        Reclamos reclamos = new Reclamos();
+        reclamos.setVisible(true);
+      
+    }//GEN-LAST:event_jMenuItem2ActionPerformed
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(PizzeriaDChelaFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(PizzeriaDChelaFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(PizzeriaDChelaFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(PizzeriaDChelaFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new PizzeriaDChelaFrame().setVisible(true);
+            }
+        });
+    }
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenu _aminMenuBar;
+    private javax.swing.JButton _cancelarJButton;
+    private javax.swing.JTextField _cantidadTextField;
+    private javax.swing.JMenu _cerrarSessionMenuBar;
+    private javax.swing.JTextField _dniTextField;
+    private javax.swing.JComboBox _metodopagoComboBox;
+    private javax.swing.JButton _ordenarJButton;
+    private javax.swing.JButton _pedidoFinalizarButton;
+    private javax.swing.JButton _pedidosButton;
+    private javax.swing.JPanel _pizzaImgPanel;
+    private javax.swing.JList _pizzasJList;
+    private javax.swing.JLabel _precioLabel;
+    private javax.swing.JComboBox _repartidorComboBox;
+    private javax.swing.JButton _seleccionarJButton;
+    private javax.swing.JMenu _verPizzasMenuBar;
+    private javax.swing.JMenu _verRepartidoresMenuBar;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenu jMenu2;
+    private javax.swing.JMenu jMenu3;
+    private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem2;
+    private javax.swing.JScrollPane jScrollPane1;
+    // End of variables declaration//GEN-END:variables
+}
